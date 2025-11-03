@@ -2,6 +2,7 @@ import random
 
 def number_guessing_game():
     print("🎯 Welcome to the Number Guessing Game!")
+    high_score = None
 
     while True:
         # Difficulty selection
@@ -36,6 +37,11 @@ def number_guessing_game():
                     print("Too high! Try again.")
                 else:
                     print(f"🎉 Congratulations! You guessed it in {attempts} attempts.")
+                    if high_score is None or attempts < high_score:
+                        high_score = attempts
+                        print("🏆 New high score!")
+                    else:
+                        print(f"💡 Current high score: {high_score} attempts")
                     break
             except ValueError:
                 print("Please enter a valid number.")
