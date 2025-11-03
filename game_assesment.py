@@ -1,4 +1,5 @@
 import random
+import time
 
 def number_guessing_game():
     print("🎯 Welcome to the Number Guessing Game!")
@@ -27,6 +28,9 @@ def number_guessing_game():
         guess_history = []
         print(f"\nI'm thinking of a number between 1 and {max_number}.")
 
+        # Start timer
+        start_time = time.time()
+
         while True:
             try:
                 guess = int(input("Enter your guess: "))
@@ -42,7 +46,10 @@ def number_guessing_game():
                 elif guess > number_to_guess:
                     print("Too high! Try again.")
                 else:
+                    end_time = time.time()
+                    time_taken = round(end_time - start_time, 2)
                     print(f"🎉 Congratulations! You guessed it in {attempts} attempts.")
+                    print(f"⏱️ Time taken: {time_taken} seconds")
                     if high_score is None or attempts < high_score:
                         high_score = attempts
                         print("🏆 New high score!")
