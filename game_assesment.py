@@ -4,9 +4,26 @@ def number_guessing_game():
     print("🎯 Welcome to the Number Guessing Game!")
 
     while True:
-        number_to_guess = random.randint(1, 100)
+        # Difficulty selection
+        print("\nChoose a difficulty level:")
+        print("1. Easy (1–50)")
+        print("2. Medium (1–100)")
+        print("3. Hard (1–200)")
+
+        difficulty = input("Enter 1, 2, or 3: ").strip()
+        if difficulty == '1':
+            max_number = 50
+        elif difficulty == '2':
+            max_number = 100
+        elif difficulty == '3':
+            max_number = 200
+        else:
+            print("Invalid choice. Defaulting to Medium.")
+            max_number = 100
+
+        number_to_guess = random.randint(1, max_number)
         attempts = 0
-        print("\nI'm thinking of a number between 1 and 100.")
+        print(f"\nI'm thinking of a number between 1 and {max_number}.")
 
         while True:
             try:
