@@ -24,11 +24,17 @@ def number_guessing_game():
 
         number_to_guess = random.randint(1, max_number)
         attempts = 0
+        guess_history = []
         print(f"\nI'm thinking of a number between 1 and {max_number}.")
 
         while True:
             try:
                 guess = int(input("Enter your guess: "))
+                if guess in guess_history:
+                    print("⚠️ You've already guessed that number! Try a different one.")
+                    continue
+
+                guess_history.append(guess)
                 attempts += 1
 
                 if guess < number_to_guess:
@@ -43,6 +49,8 @@ def number_guessing_game():
                     else:
                         print(f"💡 Current high score: {high_score} attempts")
                     break
+
+                print(f"Your guesses so far: {guess_history}")
             except ValueError:
                 print("Please enter a valid number.")
 
