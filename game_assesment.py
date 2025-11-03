@@ -48,8 +48,12 @@ def number_guessing_game():
                 else:
                     end_time = time.time()
                     time_taken = round(end_time - start_time, 2)
-                    print(f"🎉 Congratulations! You guessed it in {attempts} attempts.")
-                    print(f"⏱️ Time taken: {time_taken} seconds")
+                    print(f"\n🎉 Congratulations! You guessed it!")
+                    print("\n📊 Game Summary:")
+                    print(f"✅ Correct Number: {number_to_guess}")
+                    print(f"🔢 Total Attempts: {attempts}")
+                    print(f"🕒 Time Taken: {time_taken} seconds")
+                    print(f"📜 Your Guesses: {guess_history}")
                     if high_score is None or attempts < high_score:
                         high_score = attempts
                         print("🏆 New high score!")
@@ -57,7 +61,6 @@ def number_guessing_game():
                         print(f"💡 Current high score: {high_score} attempts")
                     break
 
-                print(f"Your guesses so far: {guess_history}")
             except ValueError:
                 print("Please enter a valid number.")
 
