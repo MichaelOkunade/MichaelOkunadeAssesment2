@@ -3,6 +3,10 @@ import time
 import tkinter as tk
 from tkinter import messagebox
 
+def get_hint(number):
+    """Returns a hint about the number: even or odd."""
+    return "even" if number % 2 == 0 else "odd"
+
 def text_based_number_guessing_game():
     print("🎯 Welcome to the Number Guessing Game!")
     high_score = None
@@ -28,6 +32,7 @@ def text_based_number_guessing_game():
         number_to_guess = random.randint(1, max_number)
         attempts = 0
         guess_history = []
+        hint_used = False
         print(f"\nI'm thinking of a number between 1 and {max_number}.")
 
         # Start timer
@@ -63,6 +68,14 @@ def text_based_number_guessing_game():
                         print(f"💡 Current high score: {high_score} attempts")
                     break
 
+                # Offer hint after 3 attempts if not used
+                if attempts >= 3 and not hint_used:
+                    hint_choice = input("Would you like a hint? (yes/no): ").strip().lower()
+                    if hint_choice in ['yes', 'y']:
+                        hint = get_hint(number_to_guess)
+                        print(f"💡 Hint: The number is {hint}.")
+                        hint_used = True
+
             except ValueError:
                 print("Please enter a valid number.")
 
@@ -86,10 +99,11 @@ def gui_number_guessing_game():
         else:
             max_number = 100
 
-        nonlocal number_to_guess, attempts, guess_history, start_time
+        nonlocal number_to_guess, attempts, guess_history, start_time, hint_used
         number_to_guess = random.randint(1, max_number)
         attempts = 0
         guess_history = []
+        hint_used = False
         start_time = time.time()
 
         feedback_label.config(text=f"I'm thinking of a number between 1 and {max_number}.")
@@ -100,7 +114,18 @@ def gui_number_guessing_game():
         guess_entry.config(state='normal')
         guess_entry.delete(0, tk.END)
         submit_button.config(state='normal')
+        hint_button.config(state='normal')
         play_again_button.pack_forget()
+
+    def get_hint_gui():
+        nonlocal hint_used
+        if hint_used:
+            feedback_label.config(text="💡 You've already used your hint!")
+            return
+        hint = get_hint(number_to_guess)
+        feedback_label.config(text=f"💡 Hint: The number is {hint}.")
+        hint_used = True
+        hint_button.config(state='disabled')
 
     def submit_guess():
         try:
@@ -133,6 +158,7 @@ def gui_number_guessing_game():
                     high_score_label.config(text=f"💡 Current high score: {high_score[0]} attempts")
                 guess_entry.config(state='disabled')
                 submit_button.config(state='disabled')
+                hint_button.config(state='disabled')
                 play_again_button.pack()
 
         except ValueError:
@@ -174,6 +200,9 @@ def gui_number_guessing_game():
     submit_button = tk.Button(game_frame, text="Submit Guess", command=submit_guess, state='disabled', bg="blue", fg="white")
     submit_button.pack(pady=5)
 
+    hint_button = tk.Button(game_frame, text="Get Hint", command=lambda: get_hint_gui(), state='disabled', bg="purple", fg="white")
+    hint_button.pack(pady=5)
+
     correct_label = tk.Label(game_frame, text="", font=("Arial", 10, "bold"))
     correct_label.pack()
 
@@ -198,6 +227,7 @@ def gui_number_guessing_game():
     number_to_guess = None
     attempts = 0
     guess_history = []
+    hint_used = False
     start_time = None
 
     root.mainloop()
@@ -219,3 +249,4 @@ def game_menu():
 
 # Run the game menu
 game_menu()
+s
