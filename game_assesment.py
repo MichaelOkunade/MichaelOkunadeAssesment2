@@ -1,7 +1,7 @@
 import random
 import time
 
-def number_guessing_game():
+def text_based_number_guessing_game():
     print("🎯 Welcome to the Number Guessing Game!")
     high_score = None
 
@@ -69,5 +69,20 @@ def number_guessing_game():
             print("Thanks for playing! Goodbye 👋")
             break
 
-# Run the game
-number_guessing_game()
+def game_menu():
+    while True:
+        print("\n🎮 Game Menu:")
+        print("1. Text-Based Number Guessing Game")
+        print("2. Still working on this")
+        choice = input("Choose an option (1 or 2): ").strip()
+        if choice == '1':
+            text_based_number_guessing_game()
+            break
+        elif choice == '2':
+            print("Still working on this")
+            break
+        else:
+            print("Invalid choice. Please enter 1 or 2.")
+
+# Run the game menu
+game_menu()
