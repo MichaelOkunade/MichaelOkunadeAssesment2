@@ -1,5 +1,7 @@
 import random
 import time
+import tkinter as tk
+from tkinter import messagebox
 
 def text_based_number_guessing_game():
     print("🎯 Welcome to the Number Guessing Game!")
@@ -69,17 +71,148 @@ def text_based_number_guessing_game():
             print("Thanks for playing! Goodbye 👋")
             break
 
+def gui_number_guessing_game():
+    # Global high score
+    high_score = [None]
+
+    def start_game():
+        difficulty = difficulty_var.get()
+        if difficulty == 'Easy':
+            max_number = 50
+        elif difficulty == 'Medium':
+            max_number = 100
+        elif difficulty == 'Hard':
+            max_number = 200
+        else:
+            max_number = 100
+
+        nonlocal number_to_guess, attempts, guess_history, start_time
+        number_to_guess = random.randint(1, max_number)
+        attempts = 0
+        guess_history = []
+        start_time = time.time()
+
+        feedback_label.config(text=f"I'm thinking of a number between 1 and {max_number}.")
+        attempts_label.config(text="Attempts: 0")
+        time_label.config(text="Time: 0.00 seconds")
+        history_label.config(text="Guesses: []")
+        correct_label.config(text="")
+        guess_entry.config(state='normal')
+        guess_entry.delete(0, tk.END)
+        submit_button.config(state='normal')
+        play_again_button.pack_forget()
+
+    def submit_guess():
+        try:
+            guess = int(guess_entry.get())
+            guess_entry.delete(0, tk.END)
+            if guess in guess_history:
+                feedback_label.config(text="⚠️ You've already guessed that number! Try a different one.")
+                return
+
+            guess_history.append(guess)
+            nonlocal attempts
+            attempts += 1
+
+            if guess < number_to_guess:
+                feedback_label.config(text="Too low! Try again.")
+            elif guess > number_to_guess:
+                feedback_label.config(text="Too high! Try again.")
+            else:
+                end_time = time.time()
+                time_taken = round(end_time - start_time, 2)
+                feedback_label.config(text="🎉 Congratulations! You guessed it!")
+                correct_label.config(text=f"Correct Number: {number_to_guess}")
+                attempts_label.config(text=f"Total Attempts: {attempts}")
+                time_label.config(text=f"Time Taken: {time_taken} seconds")
+                history_label.config(text=f"Your Guesses: {guess_history}")
+                if high_score[0] is None or attempts < high_score[0]:
+                    high_score[0] = attempts
+                    high_score_label.config(text="🏆 New high score!")
+                else:
+                    high_score_label.config(text=f"💡 Current high score: {high_score[0]} attempts")
+                guess_entry.config(state='disabled')
+                submit_button.config(state='disabled')
+                play_again_button.pack()
+
+        except ValueError:
+            feedback_label.config(text="Please enter a valid number.")
+            guess_entry.delete(0, tk.END)
+
+    def play_again():
+        start_game()
+
+    def quit_game():
+        root.quit()
+
+    root = tk.Tk()
+    root.title("🎯 Number Guessing Game")
+    root.geometry("400x500")
+
+    # Difficulty frame
+    difficulty_frame = tk.Frame(root)
+    difficulty_frame.pack(pady=10)
+    tk.Label(difficulty_frame, text="Choose difficulty:", font=("Arial", 12, "bold")).pack()
+    difficulty_var = tk.StringVar(value='Medium')
+    tk.Radiobutton(difficulty_frame, text="Easy (1-50)", variable=difficulty_var, value='Easy').pack(anchor='w')
+    tk.Radiobutton(difficulty_frame, text="Medium (1-100)", variable=difficulty_var, value='Medium').pack(anchor='w')
+    tk.Radiobutton(difficulty_frame, text="Hard (1-200)", variable=difficulty_var, value='Hard').pack(anchor='w')
+
+    start_button = tk.Button(root, text="Start Game", command=start_game, bg="green", fg="white")
+    start_button.pack(pady=5)
+
+    # Game frame
+    game_frame = tk.Frame(root)
+    game_frame.pack(pady=10)
+
+    feedback_label = tk.Label(game_frame, text="", font=("Arial", 10))
+    feedback_label.pack()
+
+    guess_entry = tk.Entry(game_frame, state='disabled', width=20)
+    guess_entry.pack(pady=5)
+
+    submit_button = tk.Button(game_frame, text="Submit Guess", command=submit_guess, state='disabled', bg="blue", fg="white")
+    submit_button.pack(pady=5)
+
+    correct_label = tk.Label(game_frame, text="", font=("Arial", 10, "bold"))
+    correct_label.pack()
+
+    attempts_label = tk.Label(game_frame, text="Attempts: 0", font=("Arial", 10))
+    attempts_label.pack()
+
+    time_label = tk.Label(game_frame, text="Time: 0.00 seconds", font=("Arial", 10))
+    time_label.pack()
+
+    history_label = tk.Label(game_frame, text="Guesses: []", font=("Arial", 10))
+    history_label.pack()
+
+    high_score_label = tk.Label(game_frame, text="", font=("Arial", 10, "italic"))
+    high_score_label.pack()
+
+    play_again_button = tk.Button(game_frame, text="Play Again", command=play_again, bg="orange", fg="white")
+
+    quit_button = tk.Button(root, text="Quit", command=quit_game, bg="red", fg="white")
+    quit_button.pack(side='bottom', pady=10)
+
+    # Initialize variables
+    number_to_guess = None
+    attempts = 0
+    guess_history = []
+    start_time = None
+
+    root.mainloop()
+
 def game_menu():
     while True:
         print("\n🎮 Game Menu:")
         print("1. Text-Based Number Guessing Game")
-        print("2. Still working on this")
+        print("2. GUI Number Guessing Game")
         choice = input("Choose an option (1 or 2): ").strip()
         if choice == '1':
             text_based_number_guessing_game()
             break
         elif choice == '2':
-            print("Still working on this")
+            gui_number_guessing_game()
             break
         else:
             print("Invalid choice. Please enter 1 or 2.")
